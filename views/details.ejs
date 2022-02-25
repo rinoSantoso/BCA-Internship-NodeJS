@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <%- include("./partials/head.ejs") %> 
+
+        <div class="content">
+            <div class="container-fluid">
+                <div class="card" style="width: 96%; margin: 0px auto;">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <img src="/kbnp1.png" class="img row" alt="..." style="width: 100%;padding: 8px; margin: 20px;">
+                            <div class="card row" style="width: 96%; padding: 8px; margin: 27px;" id="mapSmall"></div>
+                        </div>
+                        
+                        <div class="col">
+                            <div class="card-body">
+                                <!-- Nama Cabang -->
+                                <h4 class="card-title text-primary"><%= rows[0].nama %></h4><br>
+                                <table class="table align-middle">
+                                    <tr>
+                                        <th class="text-end" style="padding-right: 16px;">Kantor Wilayah</th>
+                                        <!-- Kantor Wilayah -->
+                                        <% if (rows[0].kw == 1) { %>
+                                            <td colspan="3"><%= rows[0].kw %> -> Jawa Barat</td>
+                                        <% } else if (rows[0].kw == 2) { %>
+                                            <td colspan="3"><%= rows[0].kw %> Jawa Tengah</td>
+                                        <% } else if (rows[0].kw == 3) { %>
+                                            <td colspan="3"><%= rows[0].kw %> Jawa Timur (bagian utara)</td>
+                                        <% } else if (rows[0].kw == 7) { %>
+                                            <td colspan="3"><%= rows[0].kw %> -> Jawa Timur (bagian selatan)</td>
+                                        <% } else if (rows[0].kw == 8) { %>
+                                            <td colspan="3"><%= rows[0].kw %> -> Jakarta Selatan + Tengerang Selatan</td>
+                                        <% } else if (rows[0].kw == 9) { %>
+                                            <td colspan="3"><%= rows[0].kw %> -> Jakarta Timur + Depok + Bogor</td>
+                                        <% } else if (rows[0].kw == 10) { %>
+                                            <td colspan="3"><%= rows[0].kw %> -> Jakarta Utara</td>
+                                        <% } else if (rows[0].kw == 12) { %>
+                                            <td colspan="3"><%= rows[0].kw %> -> Jakarta Barat + Tangerang</td>
+                                        <% } %>
+                                        <th class="text-end" style="padding-right: 16px;">Sandi Cabang</th>
+                                        <td colspan="3"><%= rows[0].scab %></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="col-3 text-end" style="padding-right: 16px;">Kode Cabang</th>
+                                        <td colspan="3"><%= rows[0].kcab %></td>
+                                        <th class="col-3 text-end" style="padding-right: 16px;">Inisial Cabang</th>
+                                        <td colspan="3"><%= rows[0].icab %></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="col text-end" style="padding-right: 16px;">Cabang Koordinator</th>
+                                        <td colspan="3"><%= rows[0].cabkoor %></td>
+                                        <th class="col text-end" style="padding-right: 16px;">KCU Induk</th>
+                                        <td colspan="3"><%= rows[0].kcui %></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="col text-end" style="padding-right: 16px;">Kode BI</th>
+                                        <td colspan="3"><%= rows[0].kbi %></td>
+                                        <th class="col text-end" style="padding-right: 16px;">Sandi Kantor (BI)</th>
+                                        <td colspan="3"><%= rows[0].sandikantor %></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="col text-end" style="padding-right: 16px;">Alamat</th>
+                                        <td colspan="3"><%= rows[0].alamat %></td>
+                                        <th class="col text-end" style="padding-right: 16px;">Kode Pos</th>
+                                        <td><%= rows[0].kodepos %></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="col text-end" style="padding-right: 16px;">Provinsi</th>
+                                        <td ><%= rows[0].prov %></td>
+                                        <th class="col text-end" style="padding-right: 16px;">Kota</th>
+                                        <td ><%= rows[0].kota %></td>
+                                        <th class="col text-end" style="padding-right: 16px;">Kota fokus?</th>
+                                        <% if(rows[0].kotafokus == 'Y') {%>
+                                            <td>Ya</td>    
+                                        <% } else { %>
+                                            <td>Tidak</td>
+                                        <% } %>
+                                    </tr>
+                                    <tr>
+                                        <th class="col text-end" style="padding-right: 16px;">Status Gedung</th>
+                                        <% if (rows[0].stsgdg == '') { %>
+                                            <td>Milik</td>
+                                        <% } else { %>
+                                            <td>Sewa</td>
+                                        <% } %>
+                                        <th class="col text-end" style="padding-right: 16px;">DATI II</th>
+                                        <td><%= rows[0].sandidati %></td>
+                                        <th class="col text-end" style="padding-right: 16px;">Tanggal Operasi</th>
+                                        <td ><%= rows[0].tglopr.getDate() %>/<%= rows[0].tglopr.getMonth() %>/<%= rows[0].tglopr.getFullYear() %></td>
+                                    </tr>
+                                        
+                                    <!-- <% console.log(typeof(rows[0].tglopr)) %>
+                                    <% console.log(rows[0].tglopr.getDate()) %> -->
+                                    
+                                    <tr>
+                                        <th class="col text-end" style="padding-right: 16px;">Area</th>
+                                        <td><%= rows[0].area %></td>
+                                        <th class="col text-end" style="padding-right: 16px;">Titik Lokasi</th>
+                                        <td><%= rows[0].ttklok %></td>
+                                        <th class="col text-end" style="padding-right: 16px;">Clustering</th>
+                                        <% if (rows[0].clustering == '') { %>
+                                            <td>-</td>
+                                        <% } else { %>
+                                            <td><%= rows[0].clustering %> </td>
+                                        <% } %>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                </div> <br>
+                
+                    
+                </div>
+                <div class="card" style="width: 94%; margin: 0px auto;">
+                  <div class="card-body">
+                    <canvas id="comparisonChart"></canvas>
+                  </div>
+                </div>
+                <br>
+                <div class="card" style="width: 94%; margin: 0px auto;">
+                  <div class="card-body">
+                    <canvas id="forecastChart"></canvas>
+                  </div>
+                <div>
+                <br>
+                <div class="card" style="width: 94%; margin: 0px auto;">
+                  <div class="card-body">
+                    <canvas id="forecastChart2"></canvas>
+                  </div>
+                </div>
+                    <div class="card card-stats">
+                      <div class="card-header card-header-warning card-header-icon">
+                        <div class="card-icon">
+                          <i class="material-icons">store</i>
+                        </div>
+                        <p class="card-category">Coefficient of Determination (R<sup>2</sup>):</p>
+                        <h3 class="card-title"> <%= forecastData['R'] %> 
+                        </h3>
+                      </div>
+                      <div class="card-footer">
+                        <div class="stats">
+                          <i class="material-icons"><br></i>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card card-stats">
+                      <div class="card-header card-header-warning card-header-icon">
+                        <div class="card-icon">
+                          <i class="material-icons">store</i>
+                        </div>
+                        <p class="card-category">Coefficient of Correlation (R):</p>
+                        <h3 class="card-title"> <%= forecastData['r_squared'] %> 
+                        </h3>
+                      </div>
+                      <div class="card-footer">
+                        <div class="stats">
+                          <i class="material-icons"><br></i>
+                        </div>
+                      </div>
+                    </div> 
+                    <div class="card card-stats">
+                      <div class="card-header card-header-warning card-header-icon">
+                        <div class="card-icon">
+                          <i class="material-icons">store</i>
+                        </div>
+                        <p class="card-category">Mean Absolute Percentage Error (MAPE):</p>
+                        <h3 class="card-title"> <%= forecastData['mape'] %> 
+                        </h3>
+                      </div>
+                      <div class="card-footer">
+                        <div class="stats">
+                          <i class="material-icons"><br></i>
+                        </div>
+                      </div>
+                    </div> 
+                  </div>
+                </div>
+            </div>
+        </div>
+
+      <%- include("./partials/footer.ejs") %> 
+  <script>
+
+    var map = L.map('mapSmall').setView([<%= rows[0].lat %>, <%= rows[0].lon %>], 15);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    L.marker([<%= rows[0].lat %>, <%= rows[0].lon %>]).addTo(map)
+        .bindPopup('<%= rows[0].nama %>')
+        .openPopup();    
+
+    
+
+    // Comparison Chart (Laba/Rugi vs PDRB)
+    var dataLob = <%- JSON.stringify(dataLob) %>;
+    console.log(dataLob);
+    var performanceCabang = <%- JSON.stringify(performanceCabang) %>;
+    const comparisonChartLabels = ["2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019"];
+    const comparisonChartData = {
+      labels: comparisonChartLabels,
+      datasets: [{
+        label: "Laba/Rugi Cabang " + "<%= rows[0].nama %>",
+        data: [performanceCabang[0]['laba_rugi_2010'], performanceCabang[0]['laba_rugi_2011'], performanceCabang[0]['laba_rugi_2012'], performanceCabang[0]['laba_rugi_2013'], performanceCabang[0]['laba_rugi_2014'], performanceCabang[0]['laba_rugi_2015'], performanceCabang[0]['laba_rugi_2016'], performanceCabang[0]['laba_rugi_2017'], performanceCabang[0]['laba_rugi_2018'], performanceCabang[0]['laba_rugi_2019']],
+        fill: false,
+        borderColor: 'rgb(75, 192, 192)',
+        tension: 0.1,
+        yAxisID: 'y',
+      },
+      {
+        label: "PDRB " + dataLob[0].kabupaten_atau_kota,
+        data: [dataLob[1]['2010'], dataLob[1]['2011'], dataLob[1]['2012'], dataLob[1]['2013'], dataLob[1]['2014'], dataLob[1]['2015'], dataLob[1]['2016'], dataLob[1]['2017'], dataLob[1]['2018'], dataLob[1]['2019']],
+        fill: false,
+        borderColor: "red",
+        tension: 0.1,
+        yAxisID: 'y1',
+      },]
+    };
+
+    
+
+    const comparisonChartConfig = {
+      type: 'line',
+      data: comparisonChartData,
+      options: {
+        responsive: true,
+        interaction: {
+          mode: 'index',
+          intersect: false,
+        },
+        stacked: false,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Laba/Rugi vs. PDRB'
+          }
+        },
+        scales: {
+
+          y: {
+            title: {
+              display: true,
+              text: ['Laba/Rugi', 'dalam miliar rupiah'] // array so it becomes multi lined
+            },
+            type: 'linear',
+            display: true,
+            position: 'left',
+          },
+          y1: {
+            title: {
+              display: true,
+              text: ['PDRB', 'dalam miliar rupiah'] // array so it becomes multi lined
+            },
+            type: 'linear',
+            display: true,
+            position: 'right',
+
+            // grid line settings
+            grid: {
+              drawOnChartArea: false, // only want the grid lines for one axis to show up
+            },
+          },
+        },
+      },
+    };
+
+    // Forecasting Chart
+    // Segment Utils
+
+    const predLine = function(ctx, value) {
+      if(ctx.p0DataIndex >= 9){
+        return value;
+      } else {
+        return undefined;
+      }
+    };
+
+    const predPoint = function(ctx, value) {
+      if(ctx.index > 9){
+        return value;
+      } else{
+        return 'rgb(75, 192, 192)'
+      }
+    }
+
+    const DrawPoint = function(ctx){
+      if(ctx.index > 9){
+        return 3;
+      } else{
+        return 0;
+      }
+    }
+
+
+    // Forecast Chart
+    var labaRugiForceast = <%- JSON.stringify(forecastData['prediction dataframe']) %>;
+    const forecastChartLabels = ["2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022"];
+    const forecastChartData = {
+      labels: forecastChartLabels,
+      datasets: [{
+        label: "Laba/Rugi Cabang " + "<%= rows[0].nama %>",
+        data: [performanceCabang[0]['laba_rugi_2010'], performanceCabang[0]['laba_rugi_2011'], performanceCabang[0]['laba_rugi_2012'], performanceCabang[0]['laba_rugi_2013'], performanceCabang[0]['laba_rugi_2014'], performanceCabang[0]['laba_rugi_2015'], performanceCabang[0]['laba_rugi_2016'], performanceCabang[0]['laba_rugi_2017'], performanceCabang[0]['laba_rugi_2018'], performanceCabang[0]['laba_rugi_2019'], labaRugiForceast[0]['yhat'], labaRugiForceast[1]['yhat'], labaRugiForceast[2]['yhat']],
+        fill: false,
+        borderColor: 'rgb(75, 192, 192)',
+        pointBorderColor: ctx => predPoint(ctx, 'green'),
+        segment: {
+          borderColor: ctx => predLine(ctx, 'green'),
+        },
+
+        tension: 0.1,
+        yAxisID: 'y',
+      },
+      {
+        label: "y_upper " + "<%= rows[0].nama %>",
+        data: [NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, performanceCabang[0]['laba_rugi_2019'], labaRugiForceast[0]['yhat_upper'], labaRugiForceast[1]['yhat_upper'], labaRugiForceast[2]['yhat_upper']],
+        fill: false,
+        borderColor: "red",
+        pointRadius: ctx => DrawPoint(ctx),
+        tension: 0.1,
+        yAxisID: 'y',
+      },
+      {
+        label: "y_lower " + "<%= rows[0].nama %>",
+        data: [NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, performanceCabang[0]['laba_rugi_2019'], labaRugiForceast[0]['yhat_lower'], labaRugiForceast[1]['yhat_lower'], labaRugiForceast[2]['yhat_lower']],
+        fill: '-1',
+        borderColor: "red",
+        pointRadius: ctx => DrawPoint(ctx),
+        tension: 0.1,
+        yAxisID: 'y',
+      }]
+    };
+
+    
+
+    const forecastChartConfig = {
+      type: 'line',
+      data: forecastChartData,
+      options: {
+        responsive: true,
+        interaction: {
+          mode: 'point',
+          intersect: false,
+        },
+        stacked: false,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Forecasting Laba/Rugi'
+          }
+        },
+        scales: {
+
+          y: {
+            title: {
+              display: true,
+              text: ['Laba/Rugi', 'dalam miliar rupiah'] // array so it becomes multi lined
+            },
+            type: 'linear',
+            display: true,
+            position: 'left',
+          },
+        },
+      },
+    };
+
+    // Forecast Chart 2
+    var labaRugiForceast = <%- JSON.stringify(forecastData['test_pred dataframe']) %>;
+    const forecastChartLabels2 = ["2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019"];
+    const forecastChartData2 = {
+      labels: forecastChartLabels2,
+      datasets: [{
+        label: "Laba/Rugi (y_test) Cabang " + "<%= rows[0].nama %>",
+        data: [performanceCabang[0]['laba_rugi_2010'], performanceCabang[0]['laba_rugi_2011'], performanceCabang[0]['laba_rugi_2012'], performanceCabang[0]['laba_rugi_2013'], performanceCabang[0]['laba_rugi_2014'], performanceCabang[0]['laba_rugi_2015'], performanceCabang[0]['laba_rugi_2016'], performanceCabang[0]['laba_rugi_2017'], performanceCabang[0]['laba_rugi_2018'], performanceCabang[0]['laba_rugi_2019']],
+        fill: false,
+        borderColor: 'rgb(75, 192, 192)',
+        // pointBorderColor: ctx => predPoint(ctx, 'green'),
+        // segment: {
+        //   borderColor: ctx => predLine(ctx, 'green'),
+        // },
+
+        tension: 0.1,
+        yAxisID: 'y',
+      },
+      {
+        label: "y_predict " + "<%= rows[0].nama %>",
+        data: [NaN, NaN, NaN, NaN, NaN, NaN, performanceCabang[0]['laba_rugi_2016'], labaRugiForceast[0]['yhat_upper'], labaRugiForceast[1]['yhat_upper'], labaRugiForceast[2]['yhat_upper']],
+        fill: false,
+        borderColor: "red",
+        // pointRadius: ctx => DrawPoint(ctx),
+        tension: 0.1,
+        yAxisID: 'y',
+      }]
+    };
+
+    const forecastChartConfig2 = {
+      type: 'line',
+      data: forecastChartData2,
+      options: {
+        responsive: true,
+        interaction: {
+          mode: 'index',
+          intersect: false,
+        },
+        stacked: false,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Forecasting Laba/Rugi versus'
+          }
+        },
+        scales: {
+
+          y: {
+            title: {
+              display: true,
+              text: ['Laba/Rugi', 'dalam miliar rupiah'] // array so it becomes multi lined
+            },
+            type: 'linear',
+            display: true,
+            position: 'left',
+          },
+        },
+      },
+    };
+
+    const comparisonChart = new Chart(
+      document.getElementById('comparisonChart'),
+      comparisonChartConfig
+    );
+    
+    const forecastChart = new Chart(
+      document.getElementById('forecastChart'),
+      forecastChartConfig
+    );
+
+    const forecastChart2 = new Chart(
+      document.getElementById('forecastChart2'),
+      forecastChartConfig2
+    )
+
+
+
+    $(document).ready(function() {
+      $().ready(function() {
+        $sidebar = $('.sidebar');
+
+        $sidebar_img_container = $sidebar.find('.sidebar-background');
+
+        $full_page = $('.full-page');
+
+        $sidebar_responsive = $('body > .navbar-collapse');
+
+        window_width = $(window).width();
+
+        fixed_plugin_open = $('.sidebar .sidebar-wrapper .nav li.active a p').html();
+
+        if (window_width > 767 && fixed_plugin_open == 'Dashboard') {
+          if ($('.fixed-plugin .dropdown').hasClass('show-dropdown')) {
+            $('.fixed-plugin .dropdown').addClass('open');
+          }
+
+        }
+
+        $('.fixed-plugin a').click(function(event) {
+          // Alex if we click on switch, stop propagation of the event, so the dropdown will not be hide, otherwise we set the  section active
+          if ($(this).hasClass('switch-trigger')) {
+            if (event.stopPropagation) {
+              event.stopPropagation();
+            } else if (window.event) {
+              window.event.cancelBubble = true;
+            }
+          }
+        });
+
+        $('.fixed-plugin .active-color span').click(function() {
+          $full_page_background = $('.full-page-background');
+
+          $(this).siblings().removeClass('active');
+          $(this).addClass('active');
+
+          var new_color = $(this).data('color');
+
+          if ($sidebar.length != 0) {
+            $sidebar.attr('data-color', new_color);
+          }
+
+          if ($full_page.length != 0) {
+            $full_page.attr('filter-color', new_color);
+          }
+
+          if ($sidebar_responsive.length != 0) {
+            $sidebar_responsive.attr('data-color', new_color);
+          }
+        });
+
+        $('.fixed-plugin .background-color .badge').click(function() {
+          $(this).siblings().removeClass('active');
+          $(this).addClass('active');
+
+          var new_color = $(this).data('background-color');
+
+          if ($sidebar.length != 0) {
+            $sidebar.attr('data-background-color', new_color);
+          }
+        });
+
+        $('.fixed-plugin .img-holder').click(function() {
+          $full_page_background = $('.full-page-background');
+
+          $(this).parent('li').siblings().removeClass('active');
+          $(this).parent('li').addClass('active');
+
+
+          var new_image = $(this).find("img").attr('src');
+
+          if ($sidebar_img_container.length != 0 && $('.switch-sidebar-image input:checked').length != 0) {
+            $sidebar_img_container.fadeOut('fast', function() {
+              $sidebar_img_container.css('background-image', 'url("' + new_image + '")');
+              $sidebar_img_container.fadeIn('fast');
+            });
+          }
+
+          if ($full_page_background.length != 0 && $('.switch-sidebar-image input:checked').length != 0) {
+            var new_image_full_page = $('.fixed-plugin li.active .img-holder').find('img').data('src');
+
+            $full_page_background.fadeOut('fast', function() {
+              $full_page_background.css('background-image', 'url("' + new_image_full_page + '")');
+              $full_page_background.fadeIn('fast');
+            });
+          }
+
+          if ($('.switch-sidebar-image input:checked').length == 0) {
+            var new_image = $('.fixed-plugin li.active .img-holder').find("img").attr('src');
+            var new_image_full_page = $('.fixed-plugin li.active .img-holder').find('img').data('src');
+
+            $sidebar_img_container.css('background-image', 'url("' + new_image + '")');
+            $full_page_background.css('background-image', 'url("' + new_image_full_page + '")');
+          }
+
+          if ($sidebar_responsive.length != 0) {
+            $sidebar_responsive.css('background-image', 'url("' + new_image + '")');
+          }
+        });
+
+        $('.switch-sidebar-image input').change(function() {
+          $full_page_background = $('.full-page-background');
+
+          $input = $(this);
+
+          if ($input.is(':checked')) {
+            if ($sidebar_img_container.length != 0) {
+              $sidebar_img_container.fadeIn('fast');
+              $sidebar.attr('data-image', '#');
+            }
+
+            if ($full_page_background.length != 0) {
+              $full_page_background.fadeIn('fast');
+              $full_page.attr('data-image', '#');
+            }
+
+            background_image = true;
+          } else {
+            if ($sidebar_img_container.length != 0) {
+              $sidebar.removeAttr('data-image');
+              $sidebar_img_container.fadeOut('fast');
+            }
+
+            if ($full_page_background.length != 0) {
+              $full_page.removeAttr('data-image', '#');
+              $full_page_background.fadeOut('fast');
+            }
+
+            background_image = false;
+          }
+        });
+
+        $('.switch-sidebar-mini input').change(function() {
+          $body = $('body');
+
+          $input = $(this);
+
+          if (md.misc.sidebar_mini_active == true) {
+            $('body').removeClass('sidebar-mini');
+            md.misc.sidebar_mini_active = false;
+
+            $('.sidebar .sidebar-wrapper, .main-panel').perfectScrollbar();
+
+          } else {
+
+            $('.sidebar .sidebar-wrapper, .main-panel').perfectScrollbar('destroy');
+
+            setTimeout(function() {
+              $('body').addClass('sidebar-mini');
+
+              md.misc.sidebar_mini_active = true;
+            }, 300);
+          }
+
+          // we simulate the window Resize so the charts will get updated in realtime.
+          var simulateWindowResize = setInterval(function() {
+            window.dispatchEvent(new Event('resize'));
+          }, 180);
+
+          // we stop the simulation of Window Resize after the animations are completed
+          setTimeout(function() {
+            clearInterval(simulateWindowResize);
+          }, 1000);
+
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>

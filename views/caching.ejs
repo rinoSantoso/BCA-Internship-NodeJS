@@ -1,0 +1,322 @@
+<!--
+=========================================================
+Material Dashboard - v2.1.2
+=========================================================
+
+Product Page: https://www.creative-tim.com/product/material-dashboard
+Copyright 2020 Creative Tim (https://www.creative-tim.com)
+Coded by Creative Tim
+
+=========================================================
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. -->
+<!DOCTYPE html>
+<html lang="en">
+
+  <%- include("./partials/head.ejs") %>
+
+  <div class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header card-header-info">
+              <h4 class="card-title ">List Daerah</h4>
+              <p class="card-category">Daerah Cabang BCA</p>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                Toggle column: <p class="text-info"><a class="toggle-vis" data-column="0">Sandi DATI</a> - <a class="toggle-vis" data-column="1">Territory</a> - <a class="toggle-vis" data-column="2">Provinsi</a> - <a class="toggle-vis" data-column="3">Kabupaten/Kota</a> - <a class="toggle-vis" data-column="4">Actions</a></p>
+                <table class="table table-bordered" id="table-daerah" style="width: auto;">
+                  <thead class=" text-info">
+                    <th class="text-center">
+                      Sandi DATI
+                    </th>
+                    <th>
+                      Territory
+                    </th>
+                    <th class="text-center">
+                      Provinsi
+                    </th>
+                    <th>
+                      Kabupaten/Kota
+                    </th>
+                    <th class="text-center">
+                      Actions
+                    </th>
+                  </thead>
+                  <tbody>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <%- include("./partials/footer.ejs") %> 
+  <script>
+
+    urlList = ['/details/1032', '/details/1033', '/details/1033', '/details/1034', '/details/1035']
+
+    // document.querySelector('.cache').addEventListener('click', function(event) {
+    //     event.preventDefault();
+    //     console.log("Cache button was pressed");
+        
+    //     caches.open('site-user-defined').then(function(cache) {
+    //       console.log('opening cache');
+
+    //       urlList.forEach(element => {
+    //         fetch(element).then(fetchRes => {
+    //           cache.put(element, fetchRes);
+    //       })
+    //       });
+
+    //       // fetch('/details/1031').then(fetchRes => {
+    //       //   cache.put('/details/1031', fetchRes);
+    //       // })
+    //     })
+
+    //     // fetch('/dashboard').then(fetchRes => {
+    //     //   caches.open('site-user-defined-2').then(cache => {
+    //     //     console.log("opening cache");
+    //     //     cache.put('/dashboard', fetchRes);
+    //     // })
+    // })
+
+
+
+    $(document).ready(function() {
+      $().ready(function() {
+        var table = $('#table-daerah').DataTable( {
+          
+          data: <%- JSON.stringify(regions) %>,
+          "scrollX": false,
+          lengthMenu: [10, 15, 20, 25],
+          // columnDefs: [{
+          //   "targets": [2],
+          //   //"width": '1%',
+          //   "visible": false,
+          //   "searchable": true
+          // }],
+          columns: [
+              { data: 'sandi_dati' },
+              { data: 'territory' },
+              { data: 'provinsi' },
+              { data: 'kabupaten_atau_kota' },
+              { defaultContent: "<div class='text-center'><button type='button' rel='tooltip' class='btn btn-info'><i class='material-icons'>save</i></div>"},
+          ],
+          
+        } );
+
+        $('a.toggle-vis').on( 'click', function (e) {
+            e.preventDefault();
+    
+            // Get the column API object
+            var column = table.column( $(this).attr('data-column') );
+    
+            // Toggle the visibility
+            column.visible( ! column.visible() );
+        } );
+
+        $('#table-daerah tbody').on( 'click', 'button', function () {
+          console.log('caching button was pressed');
+          var data = table.row( $(this).parents('tr') ).data();
+          fetch('/cache/' + data.sandi_dati).then(fetchRes =>{
+            fetchRes.json().then(queryData => {
+              caches.delete('site-user-defined').then(
+                caches.open('site-user-defined').then(function(cache) {
+                  console.log('opening cache');
+                  
+                  var cachesCompleted = 0
+                  for(var i = 0; i < queryData.branches.length; i++){
+                    let url = '/details/' + queryData.branches[i]['no_id'];
+                    fetch(url).then(cacheRes => {
+                      cache.put(url, cacheRes)
+                      
+                      if(cachesCompleted + 1  == queryData.branches.length){
+                        alert("You've successfully cached all branches with Sandi DATI: " + data.sandi_dati);
+                      } else {
+                        cachesCompleted++;
+                      }
+                    })
+                  }
+
+                })
+              )
+            })
+          })
+          
+        });
+
+        $sidebar = $('.sidebar');
+
+        $sidebar_img_container = $sidebar.find('.sidebar-background');
+
+        $full_page = $('.full-page');
+
+        $sidebar_responsive = $('body > .navbar-collapse');
+
+        window_width = $(window).width();
+
+        fixed_plugin_open = $('.sidebar .sidebar-wrapper .nav li.active a p').html();
+
+        if (window_width > 767 && fixed_plugin_open == 'Dashboard') {
+          if ($('.fixed-plugin .dropdown').hasClass('show-dropdown')) {
+            $('.fixed-plugin .dropdown').addClass('open');
+          }
+
+        }
+
+        $('.fixed-plugin a').click(function(event) {
+          // Alex if we click on switch, stop propagation of the event, so the dropdown will not be hide, otherwise we set the  section active
+          if ($(this).hasClass('switch-trigger')) {
+            if (event.stopPropagation) {
+              event.stopPropagation();
+            } else if (window.event) {
+              window.event.cancelBubble = true;
+            }
+          }
+        });
+
+        $('.fixed-plugin .active-color span').click(function() {
+          $full_page_background = $('.full-page-background');
+
+          $(this).siblings().removeClass('active');
+          $(this).addClass('active');
+
+          var new_color = $(this).data('color');
+
+          if ($sidebar.length != 0) {
+            $sidebar.attr('data-color', new_color);
+          }
+
+          if ($full_page.length != 0) {
+            $full_page.attr('filter-color', new_color);
+          }
+
+          if ($sidebar_responsive.length != 0) {
+            $sidebar_responsive.attr('data-color', new_color);
+          }
+        });
+
+        $('.fixed-plugin .background-color .badge').click(function() {
+          $(this).siblings().removeClass('active');
+          $(this).addClass('active');
+
+          var new_color = $(this).data('background-color');
+
+          if ($sidebar.length != 0) {
+            $sidebar.attr('data-background-color', new_color);
+          }
+        });
+
+        $('.fixed-plugin .img-holder').click(function() {
+          $full_page_background = $('.full-page-background');
+
+          $(this).parent('li').siblings().removeClass('active');
+          $(this).parent('li').addClass('active');
+
+
+          var new_image = $(this).find("img").attr('src');
+
+          if ($sidebar_img_container.length != 0 && $('.switch-sidebar-image input:checked').length != 0) {
+            $sidebar_img_container.fadeOut('fast', function() {
+              $sidebar_img_container.css('background-image', 'url("' + new_image + '")');
+              $sidebar_img_container.fadeIn('fast');
+            });
+          }
+
+          if ($full_page_background.length != 0 && $('.switch-sidebar-image input:checked').length != 0) {
+            var new_image_full_page = $('.fixed-plugin li.active .img-holder').find('img').data('src');
+
+            $full_page_background.fadeOut('fast', function() {
+              $full_page_background.css('background-image', 'url("' + new_image_full_page + '")');
+              $full_page_background.fadeIn('fast');
+            });
+          }
+
+          if ($('.switch-sidebar-image input:checked').length == 0) {
+            var new_image = $('.fixed-plugin li.active .img-holder').find("img").attr('src');
+            var new_image_full_page = $('.fixed-plugin li.active .img-holder').find('img').data('src');
+
+            $sidebar_img_container.css('background-image', 'url("' + new_image + '")');
+            $full_page_background.css('background-image', 'url("' + new_image_full_page + '")');
+          }
+
+          if ($sidebar_responsive.length != 0) {
+            $sidebar_responsive.css('background-image', 'url("' + new_image + '")');
+          }
+        });
+
+        $('.switch-sidebar-image input').change(function() {
+          $full_page_background = $('.full-page-background');
+
+          $input = $(this);
+
+          if ($input.is(':checked')) {
+            if ($sidebar_img_container.length != 0) {
+              $sidebar_img_container.fadeIn('fast');
+              $sidebar.attr('data-image', '#');
+            }
+
+            if ($full_page_background.length != 0) {
+              $full_page_background.fadeIn('fast');
+              $full_page.attr('data-image', '#');
+            }
+
+            background_image = true;
+          } else {
+            if ($sidebar_img_container.length != 0) {
+              $sidebar.removeAttr('data-image');
+              $sidebar_img_container.fadeOut('fast');
+            }
+
+            if ($full_page_background.length != 0) {
+              $full_page.removeAttr('data-image', '#');
+              $full_page_background.fadeOut('fast');
+            }
+
+            background_image = false;
+          }
+        });
+
+        $('.switch-sidebar-mini input').change(function() {
+          $body = $('body');
+
+          $input = $(this);
+
+          if (md.misc.sidebar_mini_active == true) {
+            $('body').removeClass('sidebar-mini');
+            md.misc.sidebar_mini_active = false;
+
+            $('.sidebar .sidebar-wrapper, .main-panel').perfectScrollbar();
+
+          } else {
+
+            $('.sidebar .sidebar-wrapper, .main-panel').perfectScrollbar('destroy');
+
+            setTimeout(function() {
+              $('body').addClass('sidebar-mini');
+
+              md.misc.sidebar_mini_active = true;
+            }, 300);
+          }
+
+          // we simulate the window Resize so the charts will get updated in realtime.
+          var simulateWindowResize = setInterval(function() {
+            window.dispatchEvent(new Event('resize'));
+          }, 180);
+
+          // we stop the simulation of Window Resize after the animations are completed
+          setTimeout(function() {
+            clearInterval(simulateWindowResize);
+          }, 1000);
+
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>

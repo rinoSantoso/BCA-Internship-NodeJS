@@ -1,0 +1,23 @@
+{
+    "short_name": "Dashboard",
+    "name": "Dashboard 1.0",
+    "start_url": "/dashboard",
+    "display": "standalone",
+    "background_color": "#7d9dc5",
+    "theme_color": "#7d9dc5",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "/Rhino 144x144.png",
+            "type": "image/png",
+            "sizes": "144x144",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/Rhino 512x512.png",
+            "type": "image/png",
+            "sizes": "512x512",
+            "purpose": "any maskable"
+        }
+    ]
+}
